@@ -6,7 +6,8 @@ import 'package:news_app/extensions/context_ex.dart';
 import 'package:news_app/presentation/home/home_drawer/widgets/custom_title_row.dart';
 
 class HomeDrawer extends StatelessWidget {
-  const HomeDrawer({super.key});
+  const HomeDrawer({super.key, required this.goToHome});
+  final void Function() goToHome;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +30,16 @@ class HomeDrawer extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: EdgeInsets.all(16.0),
             child: Column(
               children: [
-                CustomTitleRow(icon: Icons.home, title: "Go to home"),
+                InkWell(
+                    onTap:(){
+                      goToHome();
+                      Navigator.pop(context);
+                    },
+                    child: CustomTitleRow(icon: Icons.home, title: "Go to home")),
                 SizedBox(height: 18.h,),
                 Divider(color: ColorsManager.white),
                 SizedBox(height: 18.h,),

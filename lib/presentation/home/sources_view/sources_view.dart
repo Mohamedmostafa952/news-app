@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/DM/article_dm.dart';
+import 'package:news_app/DM/category_dm.dart';
 import 'package:news_app/DM/source_dm.dart';
 import 'package:news_app/core/assets_manager.dart';
 import 'package:news_app/presentation/home/sources_view/article.dart';
 
 class SourcesView extends StatelessWidget {
-  SourcesView({super.key});
+  SourcesView({super.key, required this.category});
+
+  final CategoryDm category;
 
   List<SourceDm> sources = [
     SourceDm(id: "1", name: "ABC-News"),

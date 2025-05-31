@@ -4,7 +4,8 @@ import 'package:news_app/DM/category_dm.dart';
 import 'package:news_app/presentation/home/categories_view/category_item.dart';
 
 class CategoriesView extends StatelessWidget {
-  const CategoriesView({super.key});
+  const CategoriesView({super.key, required this.onCategoryClicked});
+  final void Function(CategoryDm) onCategoryClicked;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,11 @@ class CategoriesView extends StatelessWidget {
             child: ListView.builder(
               itemCount: CategoryDm.categories.length,
               itemBuilder: (context, index) {
-                return CategoryItem(category: CategoryDm.categories[index]);
+                return InkWell(
+                    onTap: (){
+                      onCategoryClicked(CategoryDm.categories[index]);
+                    },
+                    child: CategoryItem(category: CategoryDm.categories[index]));
               },
             ),
           ),
