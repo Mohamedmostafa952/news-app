@@ -3,6 +3,8 @@ import 'package:news_app/DM/category_dm.dart';
 import 'package:news_app/presentation/home/categories_view/categories_view.dart';
 import 'package:news_app/presentation/home/home_drawer/home_drawer.dart';
 import 'package:news_app/presentation/home/sources_view/sources_view.dart';
+import 'package:news_app/providers/home_view_provider.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -12,26 +14,29 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late Widget selectedWidget = CategoriesView(
-    onCategoryClicked: onCategoryClicked,
-  );
+  // late Widget selectedWidget = CategoriesView(
+  //   onCategoryClicked: onCategoryClicked,
+  // );
 
+
+  late HomeViewProvider homeViewProvider;
   @override
   Widget build(BuildContext context) {
+    homeViewProvider = Provider.of<HomeViewProvider>(context);
     return Scaffold(
       appBar: AppBar(title: Text("Home"), actions: [Icon(Icons.search)]),
-      drawer: HomeDrawer(goToHome: goToHome),
-      body: selectedWidget,
+      drawer: HomeDrawer(),
+      body: homeViewProvider.view,
     );
   }
 
-  void onCategoryClicked(CategoryDm category) {
-    selectedWidget = SourcesView(category: category);
-    setState(() {});
-  }
-
-  void goToHome() {
-    selectedWidget = CategoriesView(onCategoryClicked: onCategoryClicked);
-    setState(() {});
-  }
+  // void onCategoryClicked(CategoryDm category) {
+  //   selectedWidget = SourcesView(category: category);
+  //   setState(() {});
+  // }
+  //
+  // void goToHome() {
+  //   selectedWidget = CategoriesView(onCategoryClicked: onCategoryClicked);
+  //   setState(() {});
+  // }
 }
