@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/DM/category_dm.dart';
-import 'package:news_app/presentation/home/categories_view/categories_view.dart';
+import 'package:news_app/core/routes_manager.dart';
 import 'package:news_app/presentation/home/home_drawer/home_drawer.dart';
-import 'package:news_app/presentation/home/sources_view/sources_view.dart';
 import 'package:news_app/providers/home_view_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,13 +16,20 @@ class _HomeState extends State<Home> {
   //   onCategoryClicked: onCategoryClicked,
   // );
 
-
   late HomeViewProvider homeViewProvider;
+
   @override
   Widget build(BuildContext context) {
     homeViewProvider = Provider.of<HomeViewProvider>(context);
     return Scaffold(
-      appBar: AppBar(title: Text("Home"), actions: [Icon(Icons.search)]),
+      appBar: AppBar(
+        title: Text(homeViewProvider.sourceName),
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.pushNamed(context, RoutesManager.search);
+          }, icon: Icon(Icons.search))
+        ],
+      ),
       drawer: HomeDrawer(),
       body: homeViewProvider.view,
     );
