@@ -1,13 +1,17 @@
 
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 import 'package:news_app/core/result.dart';
 import 'package:news_app/data/models/articles/Article.dart';
-import 'package:news_app/repository_contract/search_repository.dart';
+import 'package:news_app/domain/entities/article_entity.dart';
+import 'package:news_app/domain/use_cases/search_usecase.dart';
 
+@injectable
 class SearchViewModel extends ChangeNotifier{
 
-  SearchRepository repository;
-  SearchViewModel({required this.repository});
+  SearchUseCase useCase;
+  @factoryMethod
+  SearchViewModel({required this.useCase});
 
   SearchState searchState = SearchLoadingState();
 
@@ -19,15 +23,15 @@ class SearchViewModel extends ChangeNotifier{
       return;
     }
     notifyListeners();
-    var result = await repository.search(searchKey);
+    var result = await useCase.invoke(searchKey);
     switch(result){
-      case Success<List<Article>>():
+      case Success<List<ArticleEntity>>():
         searchState = SearchSuccessState(articles: result.data);
         notifyListeners();
-      case ServerError<List<Article>>():
+      case ServerError<List<ArticleEntity>>():
         searchState = SearchErrorState(error: result);
         notifyListeners();
-      case GeneralEx<List<Article>>():
+      case GeneralEx<List<ArticleEntity>>():
         searchState = SearchErrorState(exception: result);
         notifyListeners();
     }
@@ -38,7 +42,7 @@ class SearchViewModel extends ChangeNotifier{
 sealed class SearchState{}
 
 class SearchSuccessState extends SearchState{
-  List<Article> articles;
+  List<ArticleEntity> articles;
   SearchSuccessState({required this.articles});
 }
 

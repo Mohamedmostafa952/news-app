@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
 import 'package:news_app/core/result.dart';
 import 'package:news_app/data/models/category_dm.dart';
 import 'package:news_app/data/models/sources/Source.dart';
-import 'package:news_app/repository_contract/sources_repository.dart';
+import 'package:news_app/domain/entities/source_entity.dart';
+import 'package:news_app/domain/use_cases/get_sources_usecase.dart';
 
-
+@injectable
 class SourcesViewProvider extends ChangeNotifier {
   // List<Source> sources = [];
   // List<Article> articles = [];
@@ -16,23 +18,24 @@ class SourcesViewProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 
-  SourcesRepository repository;
-  SourcesViewProvider({required this.repository});
+  GetSourcesUseCase useCase;
+  @factoryMethod
+  SourcesViewProvider({required this.useCase});
 
   SourceState sourceState = SourceLoadingState();
 
   Future<void> loadSources(CategoryDm category) async {
     sourceState = SourceLoadingState();
     notifyListeners();
-    var result = await repository.getSources(category);
+    var result = await useCase.invoke(category);
     switch (result) {
-      case Success<List<Source>>():
+      case Success<List<SourceEntity>>():
         sourceState = SourceSuccessState(sources: result.data);
         notifyListeners();
-      case ServerError<List<Source>>():
+      case ServerError<List<SourceEntity>>():
         sourceState = SourceErrorState(serverError: result);
         notifyListeners();
-      case GeneralEx<List<Source>>():
+      case GeneralEx<List<SourceEntity>>():
         sourceState = SourceErrorState(exception: result);
         notifyListeners();
     }
@@ -55,7 +58,7 @@ class SourceLoadingState extends SourceState {
 }
 
 class SourceSuccessState extends SourceState {
-  List<Source> sources;
+  List<SourceEntity> sources;
 
   SourceSuccessState({required this.sources});
 }

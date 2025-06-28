@@ -1,14 +1,16 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:injectable/injectable.dart';
 import 'package:news_app/core/result.dart';
 import 'package:news_app/data/models/articles/Article.dart';
 import 'package:news_app/data/models/articles/ArticlesResponse.dart';
 import 'package:news_app/data/models/category_dm.dart';
 import 'package:news_app/data/models/sources/Source.dart';
 import 'package:news_app/data/models/sources/SourcesResponse.dart';
+import 'package:news_app/domain/entities/source_entity.dart';
 
-
+@singleton
 class ApiServices {
   static const String _apiKey = "84707b7104ef456a9b93d8b9d76b34d5";
   static const String _baseUrl = "newsapi.org"; // authority
@@ -53,7 +55,7 @@ class ApiServices {
   //   return articlesResponse.articles!;
   // }
 
-  Future<Result<List<Article>>> getArticles(Source source, {int pageNumber = 1}) async {
+  Future<Result<List<Article>>> getArticles(SourceEntity source, {int pageNumber = 1}) async {
     try {
       Uri url = Uri.https(_baseUrl, _articlesEndPoint, {
         "apiKey": _apiKey,

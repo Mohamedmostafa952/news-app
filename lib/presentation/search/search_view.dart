@@ -5,6 +5,7 @@ import 'package:news_app/core/widgets/error_widget.dart';
 import 'package:news_app/data/api_services/api_services.dart';
 import 'package:news_app/data/data_source_impl/search_data_source_impl.dart';
 import 'package:news_app/data/repository_impl/search_repository_impl.dart';
+import 'package:news_app/domain/use_cases/search_usecase.dart';
 import 'package:news_app/presentation/home/sources_view/article_item.dart';
 import 'package:news_app/providers/search_view_model.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +27,10 @@ class _SearchViewState extends State<SearchView> {
     super.initState();
     searchController = TextEditingController();
     searchProvider = SearchViewModel(
-      repository: SearchRepositoryImpl(
-        dataSource: SearchDataSourceImpl(apiServices: ApiServices()),
+      useCase: SearchUseCase(
+        repository: SearchRepositoryImpl(
+          dataSource: SearchDataSourceImpl(apiServices: ApiServices()),
+        ),
       ),
     );
   }
@@ -95,9 +98,7 @@ class _SearchViewState extends State<SearchView> {
                           ),
                         );
                       case SearchLoadingState():
-                        return Expanded(
-                          child: Text("no found articles"),
-                        );
+                        return Expanded(child: Text("no found articles"));
                       case SearchErrorState():
                         return ErrorStateWidget(
                           serverError: state.error,

@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
-
+import 'package:injectable/injectable.dart';
 import 'package:news_app/core/result.dart';
-import 'package:news_app/data/models/articles/Article.dart';
-import 'package:news_app/data/models/sources/Source.dart';
-import 'package:news_app/repository_contract/articles_repository.dart';
+import 'package:news_app/domain/entities/article_entity.dart';
+import 'package:news_app/domain/entities/source_entity.dart';
+import 'package:news_app/domain/use_cases/get_articles_usecase.dart';
 
+@injectable
 class ArticleViewProvider extends ChangeNotifier {
-  ArticlesRepository repository;
+  GetArticlesUseCase useCase;
 
-  ArticleViewProvider({required this.repository});
+  @factoryMethod
+  ArticleViewProvider({required this.useCase});
 
   ArticleState articleState = ArticleLoadingState();
-  List<Article> articles = [];
 
-  Future<void> loadArticles(Source source, {int pageNumber = 1}) async {
+  // List<Article> articles = [];
+
+  Future<void> loadArticles(SourceEntity source, {int pageNumber = 1}) async {
     articleState = ArticleLoadingState();
     notifyListeners();
-    var result = await repository.getArticles(source);
+    var result = await useCase.invoke(source);
     switch (result) {
-      case Success<List<Article>>():
+      case Success<List<ArticleEntity>>():
         // articles.addAll(result.data);
-      // articleState = ArticleSuccessState(articles: List.from(articles));
-      articleState = ArticleSuccessState(articles: result.data);
+        // articleState = ArticleSuccessState(articles: List.from(articles));
+        articleState = ArticleSuccessState(articles: result.data);
         notifyListeners();
-      case ServerError<List<Article>>():
+      case ServerError<List<ArticleEntity>>():
         articleState = ArticleErrorState(serverError: result);
         notifyListeners();
-      case GeneralEx<List<Article>>():
+      case GeneralEx<List<ArticleEntity>>():
         articleState = ArticleErrorState(exception: result);
         notifyListeners();
     }
@@ -42,7 +45,7 @@ class ArticleLoadingState extends ArticleState {
 }
 
 class ArticleSuccessState extends ArticleState {
-  List<Article> articles;
+  List<ArticleEntity> articles;
 
   ArticleSuccessState({required this.articles});
 }
