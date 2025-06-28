@@ -1,12 +1,15 @@
+import 'package:injectable/injectable.dart';
 import 'package:news_app/core/result.dart';
 import 'package:news_app/data/api_services/api_services.dart';
 import 'package:news_app/data/data_source_contract/sources_data_source.dart';
 import 'package:news_app/data/models/category_dm.dart';
 import 'package:news_app/data/models/sources/Source.dart';
 
+@Injectable(as: SourcesDataSource)
 class SourcesApiDataSourceImpl implements SourcesDataSource {
   ApiServices apiServices;
 
+  @factoryMethod
   SourcesApiDataSourceImpl({required this.apiServices});
 
   @override

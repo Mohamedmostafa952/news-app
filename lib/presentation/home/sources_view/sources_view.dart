@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:news_app/core/di/di.dart';
 import 'package:news_app/core/widgets/error_widget.dart';
 import 'package:news_app/data/api_services/api_services.dart';
 import 'package:news_app/data/data_source_impl/articles_data_source_impl.dart';
@@ -7,6 +8,8 @@ import 'package:news_app/data/data_source_impl/sources_data_source_impl.dart';
 import 'package:news_app/data/models/category_dm.dart';
 import 'package:news_app/data/repository_impl/articles_repository_impl.dart';
 import 'package:news_app/data/repository_impl/sources_repository_impl.dart';
+import 'package:news_app/domain/use_cases/get_articles_usecase.dart';
+import 'package:news_app/domain/use_cases/get_sources_usecase.dart';
 import 'package:news_app/presentation/home/sources_view/article_item.dart';
 import 'package:news_app/providers/article_view_provider.dart';
 import 'package:news_app/providers/sources_view_provider.dart';
@@ -36,14 +39,12 @@ class _SourcesViewState extends State<SourcesView> {
   }
 
   loadData() async {
-    sourcesViewProvider = SourcesViewProvider(
-      repository: SourcesRepositoryImpl(
-        dataSource: SourcesApiDataSourceImpl(apiServices: ApiServices()),
-      ),
-    );
+    sourcesViewProvider = getIt<SourcesViewProvider>();
     articleViewProvider = ArticleViewProvider(
-      repository: ArticlesRepositoryImpl(
-        dataSource: ArticleApiDataSourceImpl(apiServices: ApiServices()),
+      useCase: GetArticlesUseCase(
+        repository: ArticlesRepositoryImpl(
+          dataSource: ArticleApiDataSourceImpl(apiServices: ApiServices()),
+        ),
       ),
     );
     await sourcesViewProvider.loadSources(

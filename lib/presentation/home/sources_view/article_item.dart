@@ -2,13 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:news_app/core/colors_manager.dart';
-import 'package:news_app/data/models/articles/Article.dart';
+import 'package:news_app/domain/entities/article_entity.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ArticleItem extends StatelessWidget {
   const ArticleItem({super.key, required this.article});
 
-  final Article article;
+  final ArticleEntity article;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class ArticleItem extends StatelessWidget {
     );
   }
 
-  void _showArticleDetailsBottomSheet(BuildContext context, Article article) {
+  void _showArticleDetailsBottomSheet(BuildContext context, ArticleEntity article) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
